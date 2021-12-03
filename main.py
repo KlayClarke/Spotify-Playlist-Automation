@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 import requests
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
@@ -14,15 +15,19 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, redirect_uri=SPOTIPY
 
 current_user_id = sp.current_user()['id']
 
-print(current_user_id)
+# using user input to acquire personalized lists
 
-# # using user input to acquire personalized lists
-#
 # user_input_date = input('What year would you like to travel back to? Type the date in this format YYYY-MM-DD\n')
-# response = requests.get(url=f'https://www.billboard.com/charts/hot-100/{user_input_date}/')
-# billboard_web_content = response.text
-#
-# soup = BeautifulSoup(billboard_web_content, 'html.parser')
-# songs_tag = soup.select('li h3', limit=100)
-# song_titles = [song.text.strip() for song in songs_tag]
-# print(song_titles)
+user_input_date = '2021-05-18'
+response = requests.get(url=f'https://www.billboard.com/charts/hot-100/{user_input_date}/')
+billboard_web_content = response.text
+
+soup = BeautifulSoup(billboard_web_content, 'html.parser')
+songs_tag = soup.select('li h3', limit=100)
+song_titles = [song.text.strip() for song in songs_tag]
+
+tracks_info = [sp.search(q='track:' + song, type='track', limit=1) for song in song_titles]
+tracks_uri = [track['tracks']['items'][0]['uri'] for track in tracks_info]
+
+
+
