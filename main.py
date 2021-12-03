@@ -1,15 +1,20 @@
 import os
 import requests
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyOAuth
 from bs4 import BeautifulSoup
 
 SPOTIPY_CLIENT_ID = os.environ.get('SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = os.environ.get('SPOTIPY_CLIENT_SECRET')
+SPOTIPY_REDIRECT_URI = 'http://example.com'
 
-spotify = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+scope = 'playlist-modify-private'
 
-playlists = spotify.user_playlists('spotify')
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, redirect_uri=SPOTIPY_REDIRECT_URI))
+
+current_user_id = sp.current_user()['id']
+
+print(current_user_id)
 
 # # using user input to acquire personalized lists
 #
@@ -21,5 +26,3 @@ playlists = spotify.user_playlists('spotify')
 # songs_tag = soup.select('li h3', limit=100)
 # song_titles = [song.text.strip() for song in songs_tag]
 # print(song_titles)
-
-print(playlists)
