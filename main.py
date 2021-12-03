@@ -34,3 +34,7 @@ for track in tracks_info:
         tracks_uri.append(track['tracks']['items'][0]['uri'])
     except IndexError:
         print(f'{track} not existent in Spotify\'s inventory. Skipped!')
+
+user_new_playlist = sp.user_playlist_create(user=current_user_id,
+                                            name=f'{user_input_date} Billboard Hot 100',
+                                            public=False)
