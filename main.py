@@ -1,9 +1,10 @@
 import os
-from pprint import pprint
 import requests
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from bs4 import BeautifulSoup
+from pprint import pprint
+
 
 SPOTIPY_CLIENT_ID = os.environ.get('SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = os.environ.get('SPOTIPY_CLIENT_SECRET')
@@ -17,8 +18,7 @@ current_user_id = sp.current_user()['id']
 
 # using user input to acquire personalized lists
 
-# user_input_date = input('What year would you like to travel back to? Type the date in this format YYYY-MM-DD\n')
-user_input_date = '2021-05-18'
+user_input_date = input('What year would you like to travel back to? Type the date in this format YYYY-MM-DD\n')
 response = requests.get(url=f'https://www.billboard.com/charts/hot-100/{user_input_date}/')
 billboard_web_content = response.text
 
@@ -38,3 +38,8 @@ for track in tracks_info:
 user_new_playlist = sp.user_playlist_create(user=current_user_id,
                                             name=f'{user_input_date} Billboard Hot 100',
                                             public=False)
+user_new_playlist_id = user_new_playlist['id']
+
+sp.playlist_add_items(playlist_id=user_new_playlist_id, items=tracks_uri)
+
+
