@@ -27,7 +27,10 @@ songs_tag = soup.select('li h3', limit=100)
 song_titles = [song.text.strip() for song in songs_tag]
 
 tracks_info = [sp.search(q='track:' + song, type='track', limit=1) for song in song_titles]
-tracks_uri = [track['tracks']['items'][0]['uri'] for track in tracks_info]
 
-
-
+tracks_uri = []
+for track in tracks_info:
+    try:
+        tracks_uri.append(track['tracks']['items'][0]['uri'])
+    except IndexError:
+        print(f'{track} not existent in Spotify\'s inventory. Skipped!')
